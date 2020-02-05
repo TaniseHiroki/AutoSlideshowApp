@@ -24,13 +24,11 @@
             android:id="@+id/nextbutton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:enabled="false"
             android:text="進む"/>
         <Button
             android:id="@+id/backbutton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:enabled="false"
             android:text="戻る"/>
         <Button
             android:id="@+id/slidebutton"

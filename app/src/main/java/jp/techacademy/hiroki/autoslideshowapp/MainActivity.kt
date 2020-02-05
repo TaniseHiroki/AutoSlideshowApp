@@ -68,51 +68,60 @@ class MainActivity : AppCompatActivity() {
         }
 
         nextbutton.setOnClickListener{
-            if(imageArrayList.size != 0) {
-                val resolver = contentResolver
-                val cursor = resolver.query(
-                    MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                    null,
-                    null,
-                    null,
-                    null
-                )
-                if (imageArrayList.size - 1 == imageArrayListposition) {
-                    imageArrayListposition = 0
-                } else {
-                    imageArrayListposition++
-                }
-                val id = imageArrayList[imageArrayListposition]
-                val imageUri =
-                    ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id)
+            if(!firstflag) {
+                if (imageArrayList.size != 0) {
+                    val resolver = contentResolver
+                    val cursor = resolver.query(
+                        MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                        null,
+                        null,
+                        null,
+                        null
+                    )
+                    if (imageArrayList.size - 1 == imageArrayListposition) {
+                        imageArrayListposition = 0
+                    } else {
+                        imageArrayListposition++
+                    }
+                    val id = imageArrayList[imageArrayListposition]
+                    val imageUri =
+                        ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id)
 
-                imageView.setImageURI(imageUri)
-                cursor.close()
+                    imageView.setImageURI(imageUri)
+                    cursor.close()
+                }
+            }else {
+                getContentsInfo()
             }
         }
 
         backbutton.setOnClickListener {
-            if (imageArrayList.size != 0) {
-                val resolver = contentResolver
-                val cursor = resolver.query(
-                    MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                    null,
-                    null,
-                    null,
-                    null
-                )
-                if (imageArrayListposition == 0) {
-                    imageArrayListposition = imageArrayList.size - 1
-                } else {
-                    imageArrayListposition--
-                }
-                val id = imageArrayList[imageArrayListposition]
-                val imageUri =
-                    ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id)
+            if(!firstflag) {
+                if (imageArrayList.size != 0) {
+                    val resolver = contentResolver
+                    val cursor = resolver.query(
+                        MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                        null,
+                        null,
+                        null,
+                        null
+                    )
+                    if (imageArrayListposition == 0) {
+                        imageArrayListposition = imageArrayList.size - 1
+                    } else {
+                        imageArrayListposition--
+                    }
+                    val id = imageArrayList[imageArrayListposition]
+                    val imageUri =
+                        ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id)
 
-                imageView.setImageURI(imageUri)
-                cursor.close()
+                    imageView.setImageURI(imageUri)
+                    cursor.close()
+                }
+            } else {
+                    getContentsInfo()
             }
+
         }
     }
 
@@ -134,16 +143,13 @@ class MainActivity : AppCompatActivity() {
                 imageArrayList.add(id)
             }while (cursor.moveToNext())
         }
-        Log.d("kotlintest","0")
         if(imageArrayList.size != 0){
             val id = imageArrayList[imageArrayListposition]
             val imageUri =
                 ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id)
-            Log.d("kotlintest","1")
             imageView.setImageURI(imageUri)
             cursor.close()
         }
-        Log.d("kotlintest","2")
     }
 
     private fun checkpermission() {
