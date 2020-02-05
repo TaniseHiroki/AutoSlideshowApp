@@ -10,6 +10,7 @@ import android.provider.MediaStore
 import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
 import android.Manifest
+import android.util.Log
 
 class MainActivity : AppCompatActivity() {
 
@@ -21,14 +22,15 @@ class MainActivity : AppCompatActivity() {
     private val imageArrayList = arrayListOf<Long>()
     private var imageArrayListposition = 0
     private  var firstflag = true
+    private var permissionflag = true
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
+        startPermissionCheck()
         slidebutton.setOnClickListener{
-            if(mTimer == null || !stopflag){
+            if(mTimer == null || !stopflag ) {
                 slidebutton.setText("停止")
                 mTimer = Timer()
                 stopflag = true
@@ -38,7 +40,7 @@ class MainActivity : AppCompatActivity() {
 
                         mHandler.post{
                             //timer.text = String.format("%.1f",mTimerSec)
-                            checkpermission()
+                            getContentsInfo()
                             nextbutton.isEnabled = false
                             backbutton.isEnabled = false
                             if(imageArrayList.size - 1 == imageArrayListposition){
@@ -128,15 +130,16 @@ class MainActivity : AppCompatActivity() {
                 imageArrayList.add(id)
             }while (cursor.moveToNext())
         }
-
-        if(imageArrayList != null){
+        Log.d("kotlintest","0")
+        if(imageArrayList.size != 0){
             val id = imageArrayList[imageArrayListposition]
             val imageUri =
                 ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id)
-
+            Log.d("kotlintest","1")
             imageView.setImageURI(imageUri)
             cursor.close()
         }
+        Log.d("kotlintest","2")
     }
 
     private fun checkpermission() {
@@ -152,11 +155,26 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun startPermissionCheck(){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+                // 許可されている
+                Log.d("ANDROID10", "許可されている")
+            } else {
+                Log.d("ANDROID10", "許可されていない")
+                // 許可されていないので許可ダイアログを表示する
+                requestPermissions(arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), PERMISSIONS_REQUEST_CODE)
+            }
+        }
+    }
+
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         when (requestCode) {
             PERMISSIONS_REQUEST_CODE ->
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    getContentsInfo()
+                    Log.d("ANDROID10", "許可された")
+                } else {
+                    Log.d("ANDROID10", "許可されなかった")
                 }
         }
     }
