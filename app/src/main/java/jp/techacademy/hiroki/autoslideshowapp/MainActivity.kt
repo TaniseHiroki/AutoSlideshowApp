@@ -185,6 +185,8 @@ class MainActivity : AppCompatActivity() {
                     Log.d("ANDROID10", "許可された")
                 } else {
                     slidebutton.isEnabled = false
+                    nextbutton.isEnabled = false
+                    backbutton.isEnabled = false
                     Log.d("ANDROID10", "許可されなかった")
                 }
         }
